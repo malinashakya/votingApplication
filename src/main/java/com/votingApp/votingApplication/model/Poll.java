@@ -1,0 +1,28 @@
+package com.votingApp.votingApplication.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Data
+@NoArgsConstructor
+public class Poll {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String question;
+
+    @ElementCollection
+    //This annotation helps in making separate table with field poll_id and options
+    private List<String> options = new ArrayList<>();
+
+    @ElementCollection
+    //This annotation helps in making separate table with field poll_id and votes
+    private List<Long> votes = new ArrayList<>();
+
+
+}
