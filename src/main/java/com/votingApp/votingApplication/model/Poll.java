@@ -18,11 +18,9 @@ public class Poll {
 
     @ElementCollection
     //This annotation helps in making separate table with field poll_id and options
-    private List<String> options = new ArrayList<>();
+    private List<OptionVote> options = new ArrayList<>();
 
-    @ElementCollection
-    //This annotation helps in making separate table with field poll_id and votes
-    private List<Long> votes = new ArrayList<>();
+//   s
 
 
 }
