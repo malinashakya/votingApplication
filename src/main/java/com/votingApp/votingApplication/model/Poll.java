@@ -20,7 +20,6 @@ public class Poll {
     //This annotation helps in making separate table with field poll_id and options
     private List<OptionVote> options = new ArrayList<>();
 
-//   s
 
 
 }
