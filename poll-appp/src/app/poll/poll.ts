@@ -12,58 +12,58 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./poll.css'],
 })
 export class PollComponent implements OnInit {
-  newPoll: Poll = {
-    id: 0,
-    question: '',
-    options: [
-      { optionText: '', voteCount: 0 },
-      { optionText: '', voteCount: 0 }
-    ]
-  }
+  newPoll: Poll = this.createEmptyPoll();
   polls: Poll[] = [];
-  constructor(private pollService: PollService) {
 
-  }
+  constructor(private pollService: PollService) { }
 
   ngOnInit(): void {
     this.loadPolls();
   }
-  loadPolls() {
-    // subscribe-> means async 
-    this.pollService.getPolls().subscribe({
-      // next -> means success
-      next: (data) => {
-        this.polls = data;
-      },
-      error: (error) => {
-        console.error("Error fetching polls: ", error);
-      }
-    })
-  }
 
-  createPoll() {
-    this.pollService.createPoll(this.newPoll).subscribe({
-      next: (createdPoll) => {
-        this.polls.push(createdPoll);
-        this.resetPoll();
-      },
-      error: (error) => {
-        console.error("Error making polls", error);
-      }
+  loadPolls(): void {
+    this.pollService.getPolls().subscribe({
+      next: (data) => this.polls = data,
+      error: (error) => console.error("Error:", error)
     });
   }
 
-  resetPoll() {
-    this.newPoll = {
-      id: 0,
+  createPoll(): void {
+    if (!this.newPoll.question.trim()) {
+      alert('Please enter a question');
+      return;
+    }
+
+    this.pollService.createPoll(this.newPoll).subscribe({
+      next: (poll) => {
+        this.polls.push(poll);
+        this.newPoll = this.createEmptyPoll();
+      },
+      error: (error) => console.error("Error:", error)
+    });
+  }
+
+  vote(poll: Poll, optionIndex: number): void {
+    poll.options[optionIndex].voteCount++;
+  }
+
+  addOption(): void {
+    this.newPoll.options.push({ optionText: '', voteCount: 0 });
+  }
+
+  removeOption(index: number): void {
+    if (this.newPoll.options.length > 2) {
+      this.newPoll.options.splice(index, 1);
+    }
+  }
+
+  private createEmptyPoll(): Poll {
+    return {
       question: '',
       options: [
         { optionText: '', voteCount: 0 },
         { optionText: '', voteCount: 0 }
       ]
-    }
-  }
-  trackByIndex(index: number): number {
-    return index;
+    };
   }
 }
